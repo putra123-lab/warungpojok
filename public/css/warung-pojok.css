@@ -1,0 +1,553 @@
+
+[x-cloak] {
+    display: none !important;
+}
+
+:root {
+    --wp-orange: #f97316;
+    --wp-orange-dark: #ea580c;
+    --wp-sidebar: #171717;
+    --wp-sidebar-soft: #262626;
+    --wp-text: #262626;
+    --wp-muted: #737373;
+    --wp-border: #e5e5e5;
+    --wp-background: #f7f7f8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    background: var(--wp-background);
+}
+
+body {
+    margin: 0;
+    color: var(--wp-text);
+    background: var(--wp-background);
+    font-family: 'Figtree', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.wp-app {
+    min-height: 100vh;
+}
+
+.wp-sidebar {
+    position: fixed;
+    z-index: 50;
+    inset: 0 auto 0 0;
+    display: flex;
+    flex-direction: column;
+    width: 258px;
+    padding: 24px 16px 18px;
+    overflow-y: auto;
+    color: #f5f5f5;
+    background: var(--wp-sidebar);
+    border-right: 1px solid #333;
+}
+
+.wp-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 8px 25px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.wp-brand-mark {
+    display: inline-flex;
+    flex: 0 0 43px;
+    align-items: center;
+    justify-content: center;
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    color: #fff;
+    background: var(--wp-orange);
+    font-size: 17px;
+    font-weight: 900;
+    box-shadow: 0 5px 16px #f973162e;
+}
+
+.wp-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.wp-brand-text strong {
+    font-size: 15px;
+    letter-spacing: .2px;
+}
+
+.wp-brand-text small {
+    color: #a3a3a3;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.wp-user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 27px;
+    padding: 13px 10px;
+    border: 1px solid #333;
+    border-radius: 13px;
+    background: #202020;
+}
+
+.wp-user-avatar,
+.wp-mobile-avatar {
+    display: flex;
+    flex: 0 0 37px;
+    align-items: center;
+    justify-content: center;
+    width: 37px;
+    height: 37px;
+    border-radius: 11px;
+    color: #fff;
+    background: var(--wp-orange);
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.wp-user-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    gap: 4px;
+}
+
+.wp-user-info strong {
+    overflow: hidden;
+    color: #fafafa;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wp-user-info span {
+    color: #a3a3a3;
+    font-size: 11px;
+    text-transform: capitalize;
+}
+
+.wp-online-dot {
+    display: inline-block;
+    flex: 0 0 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+}
+
+.wp-menu-label {
+    margin: 0 10px 11px;
+    color: #858585;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.wp-menu-label-spaced {
+    margin-top: 28px;
+}
+
+.wp-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.wp-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 46px;
+    padding: 11px 12px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: #bdbdbd;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .18s ease, color .18s ease;
+}
+
+.wp-menu-link:hover {
+    color: #fff;
+    background: var(--wp-sidebar-soft);
+}
+
+.wp-menu-link.active {
+    color: #fff;
+    border-color: #f9731630;
+    background: linear-gradient(90deg, #f9731629, #f973160d);
+}
+
+.wp-menu-link.active .wp-menu-icon {
+    color: #fb923c;
+}
+
+.wp-menu-icon {
+    display: flex;
+    flex: 0 0 21px;
+    align-items: center;
+    justify-content: center;
+    width: 21px;
+    height: 21px;
+}
+
+.wp-menu-icon svg {
+    width: 21px;
+    height: 21px;
+}
+
+.wp-menu-badge {
+    margin-left: auto;
+    padding: 3px 6px;
+    border-radius: 5px;
+    color: #fdba74;
+    background: #f9731620;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.wp-sidebar-bottom {
+    margin-top: auto;
+    padding-top: 25px;
+}
+
+.wp-sidebar-note {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 13px;
+    padding: 11px;
+    border-radius: 9px;
+    color: #a3a3a3;
+    background: #202020;
+    font-size: 11px;
+}
+
+.wp-logout-button {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    min-height: 43px;
+    padding: 10px 12px;
+    border: 1px solid #393939;
+    border-radius: 10px;
+    color: #d4d4d4;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    text-align: left;
+}
+
+.wp-logout-button:hover {
+    color: #fff;
+    border-color: #f9731660;
+    background: #f9731615;
+}
+
+.wp-logout-button svg {
+    width: 19px;
+    height: 19px;
+}
+
+.wp-main {
+    min-height: 100vh;
+    margin-left: 258px;
+    display: flex;
+    flex-direction: column;
+}
+
+.wp-page-header {
+    padding: 24px 30px;
+    border-bottom: 1px solid var(--wp-border);
+    background: #fff;
+}
+
+.wp-content {
+    flex: 1;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 28px 30px;
+}
+
+.wp-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 17px 30px;
+    border-top: 1px solid var(--wp-border);
+    color: #8a8a8a;
+    background: #fff;
+    font-size: 11px;
+}
+
+.wp-mobile-header {
+    display: none;
+}
+
+.wp-sidebar-overlay {
+    display: none;
+}
+
+/* Tampilan tablet */
+@media (max-width: 1024px) {
+    .wp-sidebar {
+        width: 230px;
+        padding-right: 13px;
+        padding-left: 13px;
+    }
+
+    .wp-main {
+        margin-left: 230px;
+    }
+
+    .wp-content {
+        padding: 23px 20px;
+    }
+
+    .wp-page-header {
+        padding: 20px;
+    }
+
+    .wp-footer {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+}
+
+/* Tampilan HP dan tablet kecil */
+@media (max-width: 767px) {
+    .wp-mobile-header {
+        position: sticky;
+        z-index: 40;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 64px;
+        padding: 10px 15px;
+        border-bottom: 1px solid #333;
+        color: #fff;
+        background: #171717;
+    }
+
+    .wp-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border: 1px solid #444;
+        border-radius: 10px;
+        color: #fff;
+        background: #262626;
+        cursor: pointer;
+    }
+
+    .wp-mobile-brand {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        gap: 9px;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .wp-mobile-brand .wp-brand-mark {
+        flex-basis: 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 13px;
+    }
+
+    .wp-mobile-avatar {
+        flex-basis: 35px;
+        width: 35px;
+        height: 35px;
+    }
+
+    .wp-sidebar {
+        z-index: 60;
+        width: min(290px, 86vw);
+        padding-top: 20px;
+        transform: translateX(-105%);
+        visibility: hidden;
+        transition: transform .22s ease, visibility .22s ease;
+    }
+
+    .wp-sidebar.wp-sidebar-open {
+        transform: translateX(0);
+        visibility: visible;
+    }
+
+    .wp-sidebar-overlay {
+        position: fixed;
+        z-index: 55;
+        inset: 0;
+        display: block;
+        background: #0009;
+        backdrop-filter: blur(2px);
+    }
+
+    .wp-main {
+        min-height: calc(100vh - 64px);
+        margin-left: 0;
+    }
+
+    .wp-content {
+        padding: 18px 14px;
+    }
+
+    .wp-page-header {
+        padding: 16px 14px;
+    }
+
+    .wp-footer {
+        flex-wrap: wrap;
+        padding: 14px;
+        font-size: 10px;
+    }
+}
+
+/* HP kecil */
+@media (max-width: 380px) {
+    .wp-mobile-brand {
+        gap: 7px;
+        font-size: 11px;
+    }
+
+    .wp-content {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+}
+
+/* =========================================
+   RESPONSIVE WARUNG POJOK
+   HP, TABLET, DAN LAPTOP
+   ========================================= */
+
+/* Mencegah konten melebar keluar layar */
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+img,
+svg {
+    max-width: 100%;
+}
+
+/* HP: layar sampai 639px */
+@media (max-width: 639px) {
+    main {
+        min-width: 0;
+        width: 100%;
+    }
+
+    main > div {
+        min-width: 0;
+    }
+
+    /* Jarak konten lebih hemat */
+    main .px-4 {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    main .py-6 {
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+
+    /* Sambutan dashboard */
+    main h1 {
+        overflow-wrap: anywhere;
+    }
+
+    /* Tombol nyaman disentuh */
+    main a,
+    main button {
+        min-height: 42px;
+    }
+
+    /* Kartu menu tersusun satu kolom */
+    main .grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* Teks panjang tidak mendorong lebar layar */
+    main p,
+    main h2,
+    main h3 {
+        overflow-wrap: anywhere;
+    }
+
+    /* Tabel dapat digulir secara horizontal */
+    main table {
+        min-width: 600px;
+    }
+
+    main .overflow-x-auto {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* TABLET: 640px sampai 1023px */
+@media (min-width: 640px) and (max-width: 1023px) {
+    main {
+        min-width: 0;
+        width: 100%;
+    }
+
+    main .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    main .overflow-x-auto {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* LAPTOP DAN DESKTOP: 1024px ke atas */
+@media (min-width: 1024px) {
+    main {
+        min-width: 0;
+        width: 100%;
+    }
+
+    main .overflow-x-auto {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+}
