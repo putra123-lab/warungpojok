@@ -1,502 +1,264 @@
 
 @php
     $user = Auth::user();
-    $isAdmin = $user && $user->role === 'admin';
 
-    $menus = [
+    $menuGroups = [
         [
-            'label' => 'Dashboard',
-            'route' => 'dashboard',
-            'icon' => 'home',
-            'roles' => ['admin', 'karyawan'],
+            'label' => 'MENU UTAMA',
+            'items' => [
+                ['label' => 'Dashboard', 'route' => 'dashboard', 'active' => ['dashboard'], 'icon' => 'home', 'roles' => ['admin', 'karyawan']],
+                ['label' => 'Kasir', 'route' => 'sales.create', 'active' => ['sales.create'], 'icon' => 'cart', 'roles' => ['admin', 'karyawan']],
+                ['label' => 'Riwayat Penjualan', 'route' => 'sales.index', 'active' => ['sales.index', 'sales.show', 'sales.receipt'], 'icon' => 'receipt', 'roles' => ['admin', 'karyawan']],
+                ['label' => 'Pesanan QR', 'route' => 'orders.index', 'active' => ['orders.index', 'orders.show'], 'icon' => 'clipboard', 'roles' => ['admin', 'karyawan']],
+            ],
         ],
         [
-            'label' => 'Kasir',
-            'route' => 'sales.create',
-            'icon' => 'cart',
-            'roles' => ['admin', 'karyawan'],
+            'label' => 'LAPORAN',
+            'items' => [
+                ['label' => 'Laporan Penjualan', 'route' => 'sales.report', 'active' => ['sales.report'], 'icon' => 'chart', 'roles' => ['admin', 'karyawan']],
+                ['label' => 'Statistik', 'route' => 'statistics.index', 'active' => ['statistics.index'], 'icon' => 'activity', 'roles' => ['admin', 'karyawan']],
+            ],
         ],
         [
-            'label' => 'Transaksi',
-            'route' => 'sales.index',
-            'icon' => 'receipt',
-            'roles' => ['admin', 'karyawan'],
-        ],
-        [
-            'label' => 'Laporan',
-            'route' => 'sales.report',
-            'icon' => 'chart',
-            'roles' => ['admin', 'karyawan'],
-        ],
-        [
-            'label' => 'Statistik',
-            'route' => 'statistics.index',
-            'icon' => 'chart',
-            'roles' => ['admin', 'karyawan'],
+            'label' => 'MANAJEMEN',
+            'items' => [
+                ['label' => 'Produk', 'route' => 'products.index', 'active' => ['products.*'], 'icon' => 'box', 'roles' => ['admin']],
+                ['label' => 'Bahan Baku', 'route' => 'ingredients.index', 'active' => ['ingredients.*'], 'icon' => 'package', 'roles' => ['admin']],
+                ['label' => 'Stok Masuk & Kedaluwarsa', 'route' => 'stock-batches.index', 'active' => ['stock-batches.*'], 'icon' => 'calendar', 'roles' => ['admin']],
+                ['label' => 'Manajemen Meja', 'route' => 'dining-tables.index', 'active' => ['dining-tables.*'], 'icon' => 'table', 'roles' => ['admin']],
+                ['label' => 'Pengguna', 'route' => 'users.index', 'active' => ['users.*'], 'icon' => 'users', 'roles' => ['admin']],
+                ['label' => 'Aktivitas Login', 'route' => 'login-activities.index', 'active' => ['login-activities.*'], 'icon' => 'clock', 'roles' => ['admin']],
+            ],
         ],
     ];
-
-    if ($isAdmin) {
-        $menus = array_merge($menus, [
-            [
-                'label' => 'Produk',
-                'route' => 'products.index',
-                'icon' => 'box',
-                'roles' => ['admin'],
-            ],
-            [
-                'label' => 'Bahan Baku',
-                'route' => 'ingredients.index',
-                'icon' => 'package',
-                'roles' => ['admin'],
-            ],
-            [
-                'label' => 'Stok Masuk & Kedaluwarsa',
-                'route' => 'stock-batches.index',
-                'icon' => 'calendar',
-                'roles' => ['admin'],
-            ],
-            [
-                'label' => 'Pengguna',
-                'route' => 'users.index',
-                'icon' => 'users',
-                'roles' => ['admin'],
-            ],
-        ]);
-    }
 @endphp
 
-<nav
-    x-data="{ mobileMenuOpen: false, sidebarOpen: false }"
-    class="wp-navigation"
->
-    {{-- LAPTOP: SIDEBAR --}}
-    <aside class="wp-sidebar">
+<div x-data="{ sidebarOpen: false }">
+
+    {{-- HEADER MOBILE --}}
+    <div class="wp-mobile-header">
+        <button type="button" class="wp-menu-toggle"
+                @click="sidebarOpen = !sidebarOpen">
+            <svg x-show="!sidebarOpen" width="22" height="22"
+                 viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round">
+                <path d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+
+            <svg x-show="sidebarOpen" x-cloak width="22" height="22"
+                 viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+                <path d="m6 6 12 12M18 6 6 18"/>
+            </svg>
+        </button>
+
+        <a href="{{ route('dashboard') }}" class="wp-mobile-brand">
+            <span class="wp-brand-mark">W</span>
+            WARUNG POJOK
+        </a>
+
+        <div class="wp-mobile-avatar">
+            {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+        </div>
+    </div>
+
+    {{-- OVERLAY --}}
+    <div class="wp-sidebar-overlay"
+         x-show="sidebarOpen"
+         x-cloak
+         @click="sidebarOpen = false">
+    </div>
+
+    {{-- SIDEBAR --}}
+    <aside class="wp-sidebar"
+           :class="{ 'wp-sidebar-open': sidebarOpen }">
+
+        {{-- BRAND --}}
         <a href="{{ route('dashboard') }}" class="wp-brand">
-            <span class="wp-brand-logo">WP</span>
+            <span class="wp-brand-mark">W</span>
             <span class="wp-brand-text">
                 <strong>WARUNG POJOK</strong>
-                <small>Point of Sale</small>
+                <small>POINT OF SALE SYSTEM</small>
             </span>
         </a>
 
-        <div class="wp-menu-label">MENU UTAMA</div>
+        {{-- USER PROFILE --}}
+        <div class="wp-user-card">
+            <div class="wp-user-avatar">
+                {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+            </div>
 
-        <div class="wp-menu-list">
-            @foreach ($menus as $menu)
-                @if (Route::has($menu['route']))
-                    <a
-                        href="{{ route($menu['route']) }}"
-                        class="wp-menu-link {{ request()->routeIs($menu['route']) ? 'active' : '' }}"
-                    >
-                        <span class="wp-menu-icon">
-                            @switch($menu['icon'])
-                                @case('home')
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/>
-                                    </svg>
-                                    @break
-                                @case('cart')
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l2.5 12h10L21 7H6M9 20h.01M17 20h.01"/>
-                                    </svg>
-                                    @break
-                                @case('receipt')
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3"/>
-                                    </svg>
-                                    @break
-                                @case('chart')
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 20V10m5 10V4m5 16v-7m5 7V7M2 20h20"/>
-                                    </svg>
-                                    @break
-                                @case('box')
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m12 3 9 5-9 5-9-5zM3 8v9l9 5 9-5V8M12 13v9"/>
-                                    </svg>
-                                    @break
-                                @case('package')
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16v14H4zM8 7V4h8v3M8 12h8M8 16h5"/>
-                                    </svg>
-                                    @break
-                                @case('calendar')
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                        <rect x="3" y="5" width="18" height="16" rx="2"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 3v4M8 3v4M3 10h18M8 14h3M8 17h6"/>
-                                    </svg>
-                                    @break
-                                @case('users')
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                        <circle cx="9" cy="8" r="4"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2 21v-2a7 7 0 0 1 14 0v2m1-16a4 4 0 0 1 0 7m2 3a5 5 0 0 1 3 4v2"/>
-                                    </svg>
-                                    @break
-                            @endswitch
-                        </span>
+            <div class="wp-user-info">
+                <strong>{{ $user->name ?? 'Pengguna' }}</strong>
+                <span>{{ ucfirst($user->role ?? 'User') }}</span>
+            </div>
 
-                        <span>{{ $menu['label'] }}</span>
-                    </a>
-                @endif
-            @endforeach
+            <span class="wp-online-dot"></span>
         </div>
 
-        <div class="wp-sidebar-footer">
-            <div class="wp-user-info">
-                <div class="wp-avatar">
-                    {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+        {{-- MENU --}}
+        @foreach ($menuGroups as $group)
+
+            @php
+                $visibleItems = collect($group['items'])->filter(
+                    fn ($item) =>
+                        in_array($user?->role, $item['roles'])
+                        && Route::has($item['route'])
+                );
+            @endphp
+
+            @if ($visibleItems->isNotEmpty())
+
+                <div class="wp-menu-label
+                    {{ $group['label'] !== 'MENU UTAMA' ? 'wp-menu-label-spaced' : '' }}">
+                    {{ $group['label'] }}
                 </div>
-                <div class="wp-user-text">
-                    <strong>{{ $user->name ?? 'Pengguna' }}</strong>
-                    <small>{{ ucfirst($user->role ?? 'user') }}</small>
+
+                <div class="wp-menu">
+
+                    @foreach ($visibleItems as $item)
+
+                        @php
+                            $isActive = request()->routeIs(...$item['active']);
+                        @endphp
+
+                        <a href="{{ route($item['route']) }}"
+                           class="wp-menu-link {{ $isActive ? 'active' : '' }}"
+                           @click="sidebarOpen = false">
+
+                            <span class="wp-menu-icon">
+
+                                @switch($item['icon'])
+
+                                    @case('home')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m3 10 9-7 9 7"/>
+                                            <path d="M5 9v11h14V9"/>
+                                            <path d="M9 20v-6h6v6"/>
+                                        </svg>
+                                        @break
+
+                                    @case('cart')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="9" cy="20" r="1"/>
+                                            <circle cx="19" cy="20" r="1"/>
+                                            <path d="M2 3h2l2.5 12h12L21 7H5"/>
+                                        </svg>
+                                        @break
+
+                                    @case('receipt')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 3h14v18l-3-2-4 2-4-2-3 2z"/>
+                                            <path d="M9 8h6M9 12h6M9 16h3"/>
+                                        </svg>
+                                        @break
+
+                                    @case('clipboard')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="5" y="4" width="14" height="17" rx="2"/>
+                                            <path d="M9 4h6M9 10h6M9 14h6M9 18h4"/>
+                                        </svg>
+                                        @break
+
+                                    @case('chart')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 3v18h18"/>
+                                            <path d="m7 14 4-4 4 3 5-7"/>
+                                        </svg>
+                                        @break
+
+                                    @case('activity')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 12h4l3-8 4 16 3-8h4"/>
+                                        </svg>
+                                        @break
+
+                                    @case('box')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m12 3 9 5-9 5-9-5z"/>
+                                            <path d="M3 8v9l9 5 9-5V8"/>
+                                            <path d="M12 13v9"/>
+                                        </svg>
+                                        @break
+
+                                    @case('package')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m12 3 9 5-9 5-9-5z"/>
+                                            <path d="M3 8v9l9 5 9-5V8"/>
+                                            <path d="M7.5 5.5 16.5 11"/>
+                                        </svg>
+                                        @break
+
+                                    @case('calendar')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="5" width="18" height="16" rx="2"/>
+                                            <path d="M16 3v4M8 3v4M3 10h18"/>
+                                        </svg>
+                                        @break
+
+                                    @case('table')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="5" width="18" height="5" rx="1"/>
+                                            <path d="M5 10v10m14-10v10M3 15h18"/>
+                                        </svg>
+                                        @break
+
+                                    @case('users')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="9" cy="8" r="4"/>
+                                            <path d="M2 21v-2a7 7 0 0 1 14 0v2"/>
+                                            <path d="M17 4a4 4 0 0 1 0 8M22 21v-2a7 7 0 0 0-4-6.3"/>
+                                        </svg>
+                                        @break
+
+                                    @case('clock')
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="9"/>
+                                            <path d="M12 7v5l3 2"/>
+                                        </svg>
+                                        @break
+
+                                @endswitch
+
+                            </span>
+
+                            <span>{{ $item['label'] }}</span>
+                        </a>
+
+                    @endforeach
+
                 </div>
+
+            @endif
+
+        @endforeach
+
+        {{-- SIDEBAR BOTTOM --}}
+        <div class="wp-sidebar-bottom">
+
+            <div class="wp-sidebar-note">
+                <span class="wp-online-dot"></span>
+                <span>Sistem kasir aktif</span>
             </div>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="wp-logout">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 17l5-5-5-5m5 5H3m9-9h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>
+
+                <button type="submit" class="wp-logout-button">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 17l5-5-5-5"/>
+                        <path d="M15 12H3"/>
+                        <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>
                     </svg>
-                    <span>Keluar</span>
+                    <span>Keluar dari Aplikasi</span>
                 </button>
             </form>
+
         </div>
+
     </aside>
 
-    {{-- HEADER HP DAN TABLET --}}
-    <header class="wp-mobile-header">
-        <a href="{{ route('dashboard') }}" class="wp-brand">
-            <span class="wp-brand-logo">WP</span>
-            <span class="wp-brand-text">
-                <strong>WARUNG POJOK</strong>
-                <small>Point of Sale</small>
-            </span>
-        </a>
-
-        <button
-            type="button"
-            class="wp-mobile-toggle"
-            @click="mobileMenuOpen = !mobileMenuOpen"
-            :aria-expanded="mobileMenuOpen.toString()"
-            aria-label="Buka menu navigasi"
-        >
-            <svg x-show="!mobileMenuOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-            <svg x-show="mobileMenuOpen" x-cloak viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" d="m6 6 12 12M18 6 6 18"/>
-            </svg>
-        </button>
-    </header>
-
-    {{-- MENU DROP-DOWN HP DAN TABLET --}}
-    <div
-        class="wp-mobile-menu"
-        x-show="mobileMenuOpen"
-        x-cloak
-        @click.outside="mobileMenuOpen = false"
-        @keydown.escape.window="mobileMenuOpen = false"
-    >
-        <div class="wp-mobile-user">
-            <div class="wp-avatar">
-                {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
-            </div>
-            <div class="wp-user-text">
-                <strong>{{ $user->name ?? 'Pengguna' }}</strong>
-                <small>{{ ucfirst($user->role ?? 'user') }}</small>
-            </div>
-        </div>
-
-        @foreach ($menus as $menu)
-            @if (Route::has($menu['route']))
-                <a
-                    href="{{ route($menu['route']) }}"
-                    class="wp-menu-link {{ request()->routeIs($menu['route']) ? 'active' : '' }}"
-                    @click="mobileMenuOpen = false"
-                >
-                    <span>{{ $menu['label'] }}</span>
-                    <span aria-hidden="true">›</span>
-                </a>
-            @endif
-        @endforeach
-
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="wp-logout">
-                <span>Keluar dari akun</span>
-            </button>
-        </form>
-    </div>
-</nav>
-
-<style>
-    [x-cloak] {
-        display: none !important;
-    }
-
-    .wp-navigation {
-        font-family: inherit;
-    }
-
-    .wp-sidebar {
-        position: fixed;
-        inset: 0 auto 0 0;
-        z-index: 40;
-        display: flex;
-        flex-direction: column;
-        width: 250px;
-        padding: 22px 16px;
-        overflow-y: auto;
-        background: #171717;
-        color: #fff;
-        border-right: 1px solid #303030;
-    }
-
-    .wp-brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 4px 8px 24px;
-        color: inherit;
-        text-decoration: none;
-    }
-
-    .wp-brand-logo {
-        display: flex;
-        flex-shrink: 0;
-        align-items: center;
-        justify-content: center;
-        width: 43px;
-        height: 43px;
-        border-radius: 12px;
-        background: #f97316;
-        color: #fff;
-        font-size: 16px;
-        font-weight: 800;
-    }
-
-    .wp-brand-text,
-    .wp-user-text {
-        display: flex;
-        min-width: 0;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .wp-brand-text strong {
-        font-size: 13px;
-        font-weight: 800;
-        letter-spacing: .04em;
-    }
-
-    .wp-brand-text small,
-    .wp-user-text small {
-        color: #a3a3a3;
-        font-size: 12px;
-    }
-
-    .wp-menu-label {
-        padding: 8px 10px 12px;
-        color: #a3a3a3;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: .13em;
-    }
-
-    .wp-menu-list {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .wp-menu-link {
-        display: flex;
-        min-height: 44px;
-        align-items: center;
-        gap: 12px;
-        padding: 11px 12px;
-        border-radius: 10px;
-        color: #d4d4d4;
-        font-size: 14px;
-        text-decoration: none;
-        transition: background .2s, color .2s;
-    }
-
-    .wp-menu-link:hover,
-    .wp-menu-link.active {
-        background: #f97316;
-        color: #fff;
-    }
-
-    .wp-menu-icon,
-    .wp-menu-icon svg {
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-    }
-
-    .wp-sidebar-footer {
-        margin-top: auto;
-        padding-top: 22px;
-    }
-
-    .wp-user-info,
-    .wp-mobile-user {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px 6px;
-    }
-
-    .wp-avatar {
-        display: flex;
-        width: 38px;
-        height: 38px;
-        flex-shrink: 0;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: #404040;
-        color: #fff;
-        font-weight: 800;
-    }
-
-    .wp-user-text strong {
-        overflow: hidden;
-        color: #fff;
-        font-size: 13px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .wp-logout {
-        display: flex;
-        width: 100%;
-        min-height: 42px;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        border: 0;
-        border-radius: 10px;
-        background: transparent;
-        color: #fca5a5;
-        cursor: pointer;
-        font: inherit;
-        font-size: 14px;
-        text-align: left;
-    }
-
-    .wp-logout:hover {
-        background: #3f2020;
-    }
-
-    .wp-logout svg {
-        width: 19px;
-        height: 19px;
-        flex-shrink: 0;
-    }
-
-    .wp-mobile-header,
-    .wp-mobile-menu {
-        display: none;
-    }
-
-    @media (min-width: 1024px) {
-        body > div.min-h-screen {
-            padding-left: 250px;
-        }
-    }
-
-    @media (max-width: 1023px) {
-        .wp-sidebar {
-            display: none;
-        }
-
-        .wp-mobile-header {
-            position: relative;
-            z-index: 50;
-            display: flex;
-            min-height: 70px;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 10px 16px;
-            border-bottom: 1px solid #e5e5e5;
-            background: #171717;
-            color: #fff;
-        }
-
-        .wp-mobile-header .wp-brand {
-            padding: 0;
-        }
-
-        .wp-mobile-toggle {
-            display: flex;
-            width: 44px;
-            height: 44px;
-            flex-shrink: 0;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #404040;
-            border-radius: 10px;
-            background: #262626;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        .wp-mobile-toggle svg {
-            width: 23px;
-            height: 23px;
-        }
-
-        .wp-mobile-menu {
-            position: absolute;
-            top: 70px;
-            right: 0;
-            left: 0;
-            z-index: 49;
-            display: block;
-            max-height: calc(100vh - 70px);
-            overflow-y: auto;
-            padding: 12px 16px 18px;
-            border-bottom: 1px solid #404040;
-            background: #171717;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, .18);
-        }
-
-        .wp-mobile-menu .wp-mobile-user {
-            margin-bottom: 8px;
-            border-bottom: 1px solid #404040;
-        }
-
-        .wp-mobile-menu .wp-menu-link {
-            justify-content: space-between;
-        }
-
-        .wp-mobile-menu .wp-logout {
-            margin-top: 8px;
-        }
-    }
-
-    @media (max-width: 380px) {
-        .wp-mobile-header {
-            padding-right: 10px;
-            padding-left: 10px;
-        }
-
-        .wp-brand-text strong {
-            font-size: 11px;
-        }
-
-        .wp-brand-text small {
-            font-size: 11px;
-        }
-
-        .wp-brand-logo {
-            width: 38px;
-            height: 38px;
-        }
-    }
-</style>
+</div>
