@@ -12,7 +12,7 @@
         </div>
     </x-slot>
 
-    <div class="min-h-screen bg-gray-100 py-8">
+    <div class="min-h-screen bg-white py-8">
         <div class="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
 
             {{-- INFORMASI PENGGUNA --}}
@@ -32,38 +32,38 @@
             </div>
 
             {{-- BANNER FOTO WARUNG --}}
-            <section class="overflow-hidden rounded-2xl bg-white shadow-lg">
+            <section class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
 
                 {{-- AREA FOTO --}}
-                <div class="relative h-[450px] bg-gray-800 sm:h-[550px] lg:h-[700px]">
+                <div class="relative h-[450px] bg-white sm:h-[550px] lg:h-[700px]">
 
                     <img
-    src="{{ asset('images/warung-pojok.jpeg') }}"
-    alt="Bangunan WARUNG POJOK"
-    class="absolute inset-0 h-full w-full object-contain object-center"
-    style="background-color: #262626;"
-    onerror="this.style.display='none'; document.getElementById('foto-fallback').style.display='flex';"
->
+                        src="{{ asset('images/warung-pojok.jpeg') }}"
+                        alt="Bangunan WARUNG POJOK"
+                        class="absolute inset-0 h-full w-full object-contain object-center"
+                        style="background-color: #ffffff;"
+                        onerror="this.style.display='none'; document.getElementById('foto-fallback').style.display='flex';"
+                    >
 
-                    {{-- TAMPILAN JIKA FOTO TIDAK DITEMUKAN --}}
+                    {{-- FOTO CADANGAN --}}
                     <div
                         id="foto-fallback"
                         style="display: none;"
-                        class="absolute inset-0 flex-col items-center justify-center bg-gray-800 p-6 text-center text-white"
+                        class="absolute inset-0 flex-col items-center justify-center bg-white p-6 text-center text-gray-900"
                     >
                         <div class="text-5xl">🏪</div>
                         <p class="mt-4 text-xl font-bold">
                             WARUNG POJOK
                         </p>
-                        <p class="mt-2 text-sm text-gray-300">
+                        <p class="mt-2 text-sm text-gray-500">
                             Periksa file public/images/warung-pojok.jpeg
                         </p>
                     </div>
 
-                    {{-- OVERLAY AGAR TULISAN TERBACA --}}
+                    {{-- OVERLAY FOTO --}}
                     <div
                         class="pointer-events-none absolute inset-0"
-                        style="background: linear-gradient(to top, rgba(0,0,0,0.78), rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.05));"
+                        style="background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.08) 55%, transparent);"
                     ></div>
 
                     {{-- JUDUL BANNER --}}
@@ -76,7 +76,7 @@
                             WARUNG POJOK
                         </h2>
 
-                        <p class="mt-3 max-w-2xl text-sm leading-relaxed text-gray-100 sm:text-base">
+                        <p class="mt-3 max-w-2xl text-sm leading-relaxed text-white sm:text-base">
                             Sistem Informasi Kasir untuk membantu pengelolaan
                             transaksi dan persediaan warung dengan lebih mudah.
                         </p>
@@ -101,7 +101,7 @@
                     <div class="md:flex md:justify-end">
                         <a
                             href="{{ route('sales.create') }}"
-                            class="inline-flex w-full items-center justify-center rounded-xl bg-orange-600 px-6 py-3 font-bold text-white shadow-sm transition hover:bg-orange-700 sm:w-auto"
+                            class="inline-flex w-full items-center justify-center rounded-xl bg-orange-500 px-6 py-3 font-bold text-white shadow-sm transition hover:bg-orange-600 sm:w-auto"
                         >
                             <span class="mr-2">＋</span>
                             Transaksi Baru
@@ -151,11 +151,11 @@
                         href="{{ route('sales.index') }}"
                         class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md"
                     >
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-2xl">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-2xl">
                             🧾
                         </div>
 
-                        <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-blue-600">
+                        <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-orange-600">
                             Transaksi
                         </h3>
 
@@ -163,7 +163,7 @@
                             Lihat daftar dan riwayat transaksi penjualan.
                         </p>
 
-                        <p class="mt-4 text-sm font-semibold text-blue-600">
+                        <p class="mt-4 text-sm font-semibold text-orange-600">
                             Lihat transaksi →
                         </p>
                     </a>
@@ -173,11 +173,11 @@
                         href="{{ route('sales.report') }}"
                         class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md"
                     >
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100 text-2xl">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-2xl">
                             📊
                         </div>
 
-                        <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-green-600">
+                        <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-orange-600">
                             Laporan Penjualan
                         </h3>
 
@@ -185,7 +185,7 @@
                             Lihat laporan dan ringkasan penjualan warung.
                         </p>
 
-                        <p class="mt-4 text-sm font-semibold text-green-600">
+                        <p class="mt-4 text-sm font-semibold text-orange-600">
                             Buka laporan →
                         </p>
                     </a>
@@ -195,11 +195,11 @@
                         href="{{ route('statistics.index') }}"
                         class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md"
                     >
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-2xl">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-2xl">
                             📈
                         </div>
 
-                        <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-purple-600">
+                        <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-orange-600">
                             Statistik
                         </h3>
 
@@ -207,7 +207,7 @@
                             Pantau ringkasan dan perkembangan penjualan.
                         </p>
 
-                        <p class="mt-4 text-sm font-semibold text-purple-600">
+                        <p class="mt-4 text-sm font-semibold text-orange-600">
                             Lihat statistik →
                         </p>
                     </a>
@@ -234,11 +234,11 @@
                             href="{{ route('products.index') }}"
                             class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                         >
-                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-100 text-2xl">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-2xl">
                                 📦
                             </div>
 
-                            <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-yellow-600">
+                            <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-orange-600">
                                 Produk
                             </h3>
 
@@ -252,11 +252,11 @@
                             href="{{ route('ingredients.index') }}"
                             class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                         >
-                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 text-2xl">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-2xl">
                                 🥬
                             </div>
 
-                            <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-red-600">
+                            <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-orange-600">
                                 Bahan Baku
                             </h3>
 
@@ -270,11 +270,11 @@
                             href="{{ route('users.index') }}"
                             class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                         >
-                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-2xl">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-2xl">
                                 👥
                             </div>
 
-                            <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-indigo-600">
+                            <h3 class="mt-4 text-lg font-bold text-gray-900 group-hover:text-orange-600">
                                 Pengguna
                             </h3>
 

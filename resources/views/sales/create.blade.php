@@ -1,18 +1,23 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Transaksi Penjualan
-        </h2>
+        <div>
+            <h2 class="text-2xl font-extrabold text-gray-800">
+                WARUNG POJOK
+            </h2>
+            <p class="mt-1 text-sm text-gray-500">
+                Kasir / Transaksi Penjualan
+            </p>
+        </div>
     </x-slot>
 
-    <div class="py-6 bg-gray-100 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen bg-white py-8">
+        <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
 
             @if ($errors->any())
-                <div class="mb-4 rounded-lg bg-red-100 p-4 text-red-700">
+                <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
                     <strong>Transaksi gagal!</strong>
-                    <ul class="list-disc pl-5 mt-2">
+                    <ul class="mt-2 list-disc pl-5">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -21,7 +26,7 @@
             @endif
 
             @if (session('success'))
-                <div class="mb-4 rounded-lg bg-green-100 p-4 text-green-700">
+                <div class="rounded-xl border border-green-200 bg-green-50 p-4 text-green-700">
                     {{ session('success') }}
                 </div>
             @endif
@@ -31,75 +36,187 @@
                   id="formTransaksi">
                 @csrf
 
-                <!-- BAGIAN 1: PILIH PRODUK -->
-                <div class="bg-white shadow-sm rounded-xl p-6 mb-6">
-                    <h3 class="text-xl font-bold mb-5">
-                        1. Pilih Produk
-                    </h3>
+                {{-- INFORMASI HALAMAN --}}
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-extrabold text-gray-900">
+                            Transaksi Kasir
+                        </h1>
+                        <p class="mt-1 text-sm text-gray-500">
+                            Pilih produk dan masukkan jumlah pesanan.
+                        </p>
+                    </div>
 
-                    @forelse ($products as $product)
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4
-                                    items-center border-b border-gray-200 py-5">
-
-                            <div class="md:col-span-2">
-                                <h4 class="text-lg font-semibold text-gray-900">
-                                    {{ $product->name }}
-                                </h4>
-
-                                <p class="text-gray-600 mt-1">
-                                    Harga:
-                                    Rp{{ number_format($product->price, 0, ',', '.') }}
-                                </p>
-
-                                <p class="text-gray-500">
-                                    Stok: {{ $product->stock }}
-                                </p>
-                            </div>
-
-                            <div>
-                                <label for="qty_{{ $product->id }}"
-                                       class="block font-medium text-gray-700 mb-2">
-                                    Jumlah
-                                </label>
-
-                                <input
-                                    type="number"
-                                    id="qty_{{ $product->id }}"
-                                    name="items[{{ $loop->index }}][quantity]"
-                                    value="{{ old('items.'.$loop->index.'.quantity', 0) }}"
-                                    min="0"
-                                    max="{{ $product->stock }}"
-                                    step="1"
-                                    data-price="{{ $product->price }}"
-                                    data-stock="{{ $product->stock }}"
-                                    class="qty-input w-full rounded-lg border-gray-300 shadow-sm"
-                                >
-
-                                <input
-                                    type="hidden"
-                                    name="items[{{ $loop->index }}][product_id]"
-                                    value="{{ $product->id }}"
-                                >
-                            </div>
-                        </div>
-                    @empty
-                        <div class="rounded-lg bg-yellow-50 p-4 text-yellow-800">
-                            Belum ada produk aktif. Tambahkan produk terlebih dahulu.
-                        </div>
-                    @endforelse
+                    <span class="rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-orange-700">
+                        🛒 Point of Sale
+                    </span>
                 </div>
 
-                <!-- BAGIAN 2: PEMBAYARAN -->
-                <div class="bg-white shadow-sm rounded-xl p-6 mb-6">
-                    <h3 class="text-xl font-bold mb-6">
-                        2. Pembayaran
-                    </h3>
+                {{-- DAFTAR PRODUK --}}
+                <section class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
 
-                    <!-- TOTAL -->
-                    <div class="mb-6">
-                        <p class="text-gray-600">Total Belanja</p>
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 p-5">
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-900">
+                                Daftar Produk
+                            </h2>
+                            <p class="text-sm text-gray-500">
+                                Pilih produk yang ingin dibeli pelanggan.
+                            </p>
+                        </div>
+
+                        <span class="rounded-lg bg-orange-50 px-4 py-2 text-sm font-bold text-orange-700">
+                            {{ $products->count() }} Produk
+                        </span>
+                    </div>
+
+                    @if ($products->count() > 0)
+
+                        {{-- NAVIGASI SLIDE --}}
+                        <div class="flex items-center justify-between gap-3 border-b border-gray-100 bg-gray-50 px-5 py-4">
+
+                            <button type="button"
+                                    id="prevSlide"
+                                    class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40">
+                                ← Sebelumnya
+                            </button>
+
+                            <div class="text-center">
+                                <p id="pageInfo" class="text-sm font-bold text-gray-800">
+                                    Slide 1
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    Maksimal 10 produk per slide
+                                </p>
+                            </div>
+
+                            <button type="button"
+                                    id="nextSlide"
+                                    class="rounded-lg bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-40">
+                                Berikutnya →
+                            </button>
+                        </div>
+
+                        {{-- GRID PRODUK --}}
+                        <div class="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+                            @foreach ($products as $product)
+                                <div class="product-card rounded-xl border border-gray-200 bg-white p-5 transition hover:border-orange-300 hover:shadow-md"
+                                     data-product-index="{{ $loop->index }}">
+
+                                    <div class="mb-4 flex items-start justify-between">
+                                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-xl">
+                                            🍜
+                                        </div>
+
+                                        <span class="rounded-full bg-green-50 px-3 py-1 text-xs font-bold text-green-700">
+                                            Aktif
+                                        </span>
+                                    </div>
+
+                                    <h3 class="text-base font-bold text-gray-900">
+                                        {{ $product->name }}
+                                    </h3>
+
+                                    <p class="mt-1 text-xs text-gray-400">
+                                        SKU: {{ $product->sku ?? '-' }}
+                                    </p>
+
+                                    <p class="mt-4 text-lg font-extrabold text-orange-600">
+                                        Rp{{ number_format($product->price, 0, ',', '.') }}
+                                    </p>
+
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        Stok tersedia: {{ $product->stock }}
+                                    </p>
+
+                                    <div class="mt-4 border-t border-gray-100 pt-4">
+                                        <label for="qty_{{ $product->id }}"
+                                               class="mb-2 block text-sm font-semibold text-gray-700">
+                                            Jumlah Pesanan
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            id="qty_{{ $product->id }}"
+                                            name="items[{{ $loop->index }}][quantity]"
+                                            value="{{ old('items.'.$loop->index.'.quantity', 0) }}"
+                                            min="0"
+                                            max="{{ $product->stock }}"
+                                            step="1"
+                                            data-price="{{ $product->price }}"
+                                            data-stock="{{ $product->stock }}"
+                                            class="qty-input w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                                            {{ $product->stock <= 0 ? 'disabled' : '' }}
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="items[{{ $loop->index }}][product_id]"
+                                            value="{{ $product->id }}"
+                                        >
+                                    </div>
+
+                                    <p class="mt-3 text-xs font-medium text-gray-400">
+                                        Subtotal:
+                                        <span class="subtotal text-gray-700">
+                                            Rp0
+                                        </span>
+                                    </p>
+                                </div>
+                            @endforeach
+
+                        </div>
+
+                        {{-- NAVIGASI BAWAH --}}
+                        <div class="flex items-center justify-between border-t border-gray-200 bg-gray-50 px-5 py-4">
+                            <span id="bottomPageInfo"
+                                  class="text-sm text-gray-500">
+                                Slide 1
+                            </span>
+
+                            <div class="flex gap-2">
+                                <button type="button"
+                                        id="prevSlideBottom"
+                                        class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700">
+                                    ←
+                                </button>
+
+                                <button type="button"
+                                        id="nextSlideBottom"
+                                        class="rounded-lg bg-orange-500 px-3 py-2 text-sm font-semibold text-white">
+                                    →
+                                </button>
+                            </div>
+                        </div>
+
+                    @else
+                        <div class="p-10 text-center">
+                            <div class="text-5xl">📦</div>
+                            <h3 class="mt-4 font-bold text-gray-800">
+                                Belum Ada Produk
+                            </h3>
+                            <p class="mt-2 text-sm text-gray-500">
+                                Tambahkan produk aktif melalui menu Produk terlebih dahulu.
+                            </p>
+                        </div>
+                    @endif
+                </section>
+
+                {{-- PEMBAYARAN --}}
+                <section class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+
+                    <h2 class="mb-6 text-xl font-extrabold text-gray-900">
+                        Pembayaran
+                    </h2>
+
+                    <div class="mb-6 rounded-xl bg-orange-50 p-5">
+                        <p class="text-sm font-medium text-gray-600">
+                            Total Belanja
+                        </p>
+
                         <h2 id="totalBelanja"
-                            class="text-3xl font-bold text-indigo-600">
+                            class="mt-2 text-3xl font-extrabold text-orange-600">
                             Rp0
                         </h2>
 
@@ -109,99 +226,99 @@
                                value="0">
                     </div>
 
-                    <!-- METODE PEMBAYARAN -->
-                    <div class="mb-5">
-                        <label for="payment_method"
-                               class="block font-semibold mb-2">
-                            Metode Pembayaran
-                        </label>
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 
-                        <select
-                            name="payment_method"
-                            id="payment_method"
-                            required
-                            class="w-full rounded-lg border-gray-300 shadow-sm p-3">
+                        <div>
+                            <label for="payment_method"
+                                   class="mb-2 block text-sm font-bold text-gray-700">
+                                Metode Pembayaran
+                            </label>
 
-                            <option value="tunai"
-                                {{ old('payment_method', 'tunai') === 'tunai' ? 'selected' : '' }}>
-                                Tunai
-                            </option>
+                            <select name="payment_method"
+                                    id="payment_method"
+                                    required
+                                    class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                                <option value="tunai"
+                                    {{ old('payment_method', 'tunai') === 'tunai' ? 'selected' : '' }}>
+                                    Tunai
+                                </option>
 
-                            <option value="qris"
-                                {{ old('payment_method') === 'qris' ? 'selected' : '' }}>
-                                QRIS
-                            </option>
+                                <option value="qris"
+                                    {{ old('payment_method') === 'qris' ? 'selected' : '' }}>
+                                    QRIS
+                                </option>
 
-                            <option value="transfer"
-                                {{ old('payment_method') === 'transfer' ? 'selected' : '' }}>
-                                Transfer
-                            </option>
-                        </select>
+                                <option value="transfer"
+                                    {{ old('payment_method') === 'transfer' ? 'selected' : '' }}>
+                                    Transfer
+                                </option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="paid_amount"
+                                   class="mb-2 block text-sm font-bold text-gray-700">
+                                Uang Dibayar (Rp)
+                            </label>
+
+                            <input type="number"
+                                   name="paid_amount"
+                                   id="paid_amount"
+                                   value="{{ old('paid_amount', 0) }}"
+                                   min="0"
+                                   step="1"
+                                   required
+                                   class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+
+                            <p class="mt-2 text-xs text-gray-500">
+                                Masukkan nominal yang dibayarkan pelanggan.
+                            </p>
+                        </div>
+
                     </div>
 
-                    <!-- UANG DIBAYAR -->
-                    <div class="mb-5">
-                        <label for="paid_amount"
-                               class="block font-semibold mb-2">
-                            Uang Dibayar (Rp)
-                        </label>
-
-                        <input
-                            type="number"
-                            name="paid_amount"
-                            id="paid_amount"
-                            value="{{ old('paid_amount', 0) }}"
-                            min="0"
-                            step="1"
-                            required
-                            class="w-full rounded-lg border-gray-300 shadow-sm p-3"
-                        >
-
-                        <p class="text-sm text-gray-500 mt-2">
-                            Untuk QRIS atau transfer, masukkan nominal yang sudah dibayarkan.
+                    <div class="mt-6 rounded-xl border border-green-200 bg-green-50 p-5">
+                        <p class="text-sm font-medium text-gray-600">
+                            Kembalian
                         </p>
-                    </div>
 
-                    <!-- KEMBALIAN -->
-                    <div class="mb-8">
-                        <p class="text-gray-600">Kembalian</p>
                         <h3 id="kembalian"
-                            class="text-2xl font-bold text-green-600">
+                            class="mt-1 text-2xl font-extrabold text-green-600">
                             Rp0
                         </h3>
                     </div>
 
-                    <!-- TOMBOL BAYAR -->
-                    <button
-                        type="submit"
-                        id="btnBayar"
-                        style="display:block;width:100%;padding:16px;
-                               background-color:#16a34a;color:#ffffff;
-                               border:none;border-radius:10px;
-                               font-size:18px;font-weight:bold;
-                               cursor:pointer;margin-bottom:12px;">
-                        BAYAR / SIMPAN TRANSAKSI
-                    </button>
+                    <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
 
-                    <!-- TOMBOL BATAL -->
-                    <a
-                        href="{{ route('sales.index') }}"
-                        style="display:block;width:100%;padding:14px;
-                               background-color:#ffffff;color:#374151;
-                               border:1px solid #d1d5db;border-radius:10px;
-                               text-align:center;text-decoration:none;">
-                        Batal
-                    </a>
-                </div>
+                        <button type="submit"
+                                id="btnBayar"
+                                class="rounded-xl bg-orange-500 px-6 py-4 font-bold text-white shadow-sm transition hover:bg-orange-600 disabled:opacity-50">
+                            BAYAR / SIMPAN TRANSAKSI
+                        </button>
+
+                        <a href="{{ route('sales.index') }}"
+                           class="rounded-xl border border-gray-300 bg-white px-6 py-4 text-center font-bold text-gray-700 transition hover:bg-gray-50">
+                            Batal
+                        </a>
+
+                    </div>
+
+                </section>
+
             </form>
-
         </div>
     </div>
 
-    <!-- PERHITUNGAN TRANSAKSI -->
+    {{-- JAVASCRIPT --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            const cards = Array.from(
+                document.querySelectorAll('.product-card')
+            );
+
             const inputs = document.querySelectorAll('.qty-input');
+
             const paidInput = document.getElementById('paid_amount');
             const totalElement = document.getElementById('totalBelanja');
             const totalInput = document.getElementById('totalInput');
@@ -209,48 +326,109 @@
             const form = document.getElementById('formTransaksi');
             const button = document.getElementById('btnBayar');
 
+            const perSlide = 10;
+            let currentSlide = 0;
+
+            const totalSlides = Math.ceil(cards.length / perSlide);
+
             function rupiah(value) {
                 return 'Rp' + Math.round(value).toLocaleString('id-ID');
             }
 
+            // SISTEM SLIDE PRODUK
+            function showSlide() {
+                const start = currentSlide * perSlide;
+                const end = start + perSlide;
+
+                cards.forEach(function(card, index) {
+                    card.style.display =
+                        (index >= start && index < end) ? 'block' : 'none';
+                });
+
+                const info = `Slide ${currentSlide + 1} dari ${totalSlides}`;
+
+                document.getElementById('pageInfo').textContent = info;
+                document.getElementById('bottomPageInfo').textContent = info;
+
+                const prevButtons = [
+                    document.getElementById('prevSlide'),
+                    document.getElementById('prevSlideBottom')
+                ];
+
+                const nextButtons = [
+                    document.getElementById('nextSlide'),
+                    document.getElementById('nextSlideBottom')
+                ];
+
+                prevButtons.forEach(btn => {
+                    btn.disabled = currentSlide === 0;
+                });
+
+                nextButtons.forEach(btn => {
+                    btn.disabled = currentSlide >= totalSlides - 1;
+                });
+            }
+
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    showSlide();
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    showSlide();
+                }
+            }
+
+            document.getElementById('nextSlide')?.addEventListener('click', nextSlide);
+            document.getElementById('nextSlideBottom')?.addEventListener('click', nextSlide);
+
+            document.getElementById('prevSlide')?.addEventListener('click', prevSlide);
+            document.getElementById('prevSlideBottom')?.addEventListener('click', prevSlide);
+
+            // HITUNG TOTAL BELANJA
             function hitungTotal() {
                 let total = 0;
 
-                inputs.forEach(function (input) {
-                    const qty = Math.max(
-                        0,
-                        parseInt(input.value, 10) || 0
-                    );
-
+                inputs.forEach(function(input) {
+                    const qty = Math.max(0, parseInt(input.value, 10) || 0);
                     const price = Number(input.dataset.price) || 0;
-                    total += qty * price;
+
+                    const subtotal = qty * price;
+                    total += subtotal;
+
+                    const card = input.closest('.product-card');
+                    const subtotalElement = card.querySelector('.subtotal');
+
+                    subtotalElement.textContent = rupiah(subtotal);
                 });
 
                 totalElement.textContent = rupiah(total);
                 totalInput.value = total;
 
-                const dibayar = Math.max(
-                    0,
-                    Number(paidInput.value) || 0
-                );
+                const dibayar = Math.max(0, Number(paidInput.value) || 0);
 
                 changeElement.textContent = rupiah(
                     Math.max(0, dibayar - total)
                 );
             }
 
-            inputs.forEach(function (input) {
+            inputs.forEach(function(input) {
                 input.addEventListener('input', hitungTotal);
             });
 
             paidInput.addEventListener('input', hitungTotal);
 
-            form.addEventListener('submit', function (event) {
+            // VALIDASI SEBELUM TRANSAKSI
+            form.addEventListener('submit', function(event) {
                 let total = 0;
                 let adaProduk = false;
                 let valid = true;
 
-                inputs.forEach(function (input) {
+                inputs.forEach(function(input) {
                     const qty = Number(input.value) || 0;
                     const stock = Number(input.dataset.stock) || 0;
                     const price = Number(input.dataset.price) || 0;
@@ -272,7 +450,7 @@
 
                 if (!valid) {
                     event.preventDefault();
-                    alert('Jumlah barang tidak valid atau melebihi stok.');
+                    alert('Jumlah produk tidak valid atau melebihi stok.');
                     return;
                 }
 
@@ -284,12 +462,9 @@
 
                 const dibayar = Number(paidInput.value);
 
-                if (
-                    !Number.isFinite(dibayar) ||
-                    dibayar < total
-                ) {
+                if (!Number.isFinite(dibayar) || dibayar < total) {
                     event.preventDefault();
-                    alert('Uang dibayar belum mencukupi total belanja.');
+                    alert('Uang pembayaran belum mencukupi.');
                     return;
                 }
 
@@ -297,7 +472,9 @@
                 button.textContent = 'MENYIMPAN TRANSAKSI...';
             });
 
+            showSlide();
             hitungTotal();
+
         });
     </script>
 </x-app-layout>

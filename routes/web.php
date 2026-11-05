@@ -8,6 +8,7 @@ use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\StockBatchController;
+use App\Http\Controllers\LoginActivityController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -61,6 +62,10 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/stock-batches', [StockBatchController::class, 'store'])
             ->name('stock-batches.store');
+
+        // Riwayat Login dan Logout
+        Route::get('/login-activities', [LoginActivityController::class, 'index'])
+            ->name('login-activities.index');
     });
 });
 
